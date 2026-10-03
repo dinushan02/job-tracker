@@ -9,7 +9,7 @@ from app.main import app
 
 
 @pytest.fixture
-def client():
+def anon_client():
     engine = create_engine(
         "sqlite://",
         connect_args={"check_same_thread": False},
@@ -30,3 +30,15 @@ def client():
         yield c
     app.dependency_overrides.clear()
     Base.metadata.drop_all(bind=engine)
+
+
+@pytest.fixture
+def client(anon_client):
+    creds = {"email": "user@example.com", "password": "password123"}
+    anon_client.post("/auth/register", json=creds)
+    r = anon_client.post(
+        "/auth/login",
+        data={"username": creds["email"], "password": creds["password"]},
+    )
+    anon_client.headers["Authorization"] = f"Bearer {r.json()['access_token']}"
+    return anon_client

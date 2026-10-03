@@ -1,3 +1,5 @@
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
+
 from datetime import date, datetime
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -32,3 +34,20 @@ class ApplicationOut(ApplicationBase):
 
     id: int
     created_at: datetime
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=8, max_length=64)
+
+
+class UserOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    email: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
