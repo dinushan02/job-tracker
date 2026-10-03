@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.database import Base, engine
-from app.routers import applications, auth
+from app.routers import applications, auth, dashboard
 
 
 @asynccontextmanager
@@ -16,6 +16,7 @@ async def lifespan(_: FastAPI):
 app = FastAPI(title="Job Application Tracker", lifespan=lifespan)
 app.include_router(auth.router)
 app.include_router(applications.router)
+app.include_router(dashboard.router)
 
 
 @app.get("/health", tags=["meta"])

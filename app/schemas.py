@@ -51,3 +51,15 @@ class UserOut(BaseModel):
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class WeekCount(BaseModel):
+    week_start: date
+    count: int
+
+
+class DashboardStats(BaseModel):
+    total: int
+    by_status: dict[str, int]
+    response_rate: float
+    per_week: list[WeekCount]
